@@ -1,2 +1,1 @@
-# CS1_Code
-CS1 Code 
+Code for CS1, in order to easily transfer it between computers
