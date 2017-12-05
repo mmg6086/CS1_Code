@@ -1,3 +1,12 @@
+"""
+Author: Matthew Grudzinski
+Description:
+    This program allows the user to use and access parts of a Binary Trie, which stores Binary
+    values at the leaf of every branch. It allows insertion, as well as many smaller functions
+    to get a list of entries, the size, the height, or even will find the closest value to a given
+    binary number. probably does more but I can't be bothered to scroll down any more.
+"""
+
 from rit_lib import *
 
 Trie = struct_type("Trie",
@@ -134,11 +143,55 @@ def smallest(trie):
 
 
 def search(trie, st):
-    fuck_this = "I got other things to do"
-    return fuck_this
+    """
+    useless 2 parametere function that literally just passes stuff into a good function with
+    a hot 3 parameters
+    :param trie: Trie struct
+    :param st: string to find the closest string to it in the Trie
+    :return: closes string to the given one
+    """
+    return the_real_search_shady(trie, st, 0)
+
+
+def the_real_search_shady(trie, st, idx):
+    """
+    the OG search function. given a trie, string, and starting index of 0, search recursively through
+    the trie in order to find the closest string to the given one, st. the index starts at 0 and
+    increases with each recursive call.
+    :param trie: Trie type
+    :param st: string to compare
+    :param idx: index, to check each number of the st
+    :return: closest string to the passed in one
+    """
+    if trie.value is not None:
+        return trie.value
+    elif st[idx] == "0":
+        """
+        if you want to go left, do so as long as left is not none, and increment the index.
+        if you can't go left, go right but do not increment the index, because you'll want to 
+        go left as soon as you can.
+        """
+        if trie.left is not None:
+            return the_real_search_shady(trie.left, st, idx + 1)
+        else:
+            return the_real_search_shady(trie.right, st, idx)
+    elif st[idx] == "1":
+        """
+        same logic as above.
+        """
+        if trie.right is not None:
+            return the_real_search_shady(trie.right, st, idx + 1)
+        else:
+            return the_real_search_shady(trie.left, st, idx)
 
 
 def size(trie):
+    """
+    If you've ever seen a trie_to_list function, you might recognize this fella.
+    using the same logic, add 1 for every leaf of the Trie, then return the size
+    :param trie: Trie type
+    :return: size of the Trie
+    """
     if trie is None:
         return 0
     elif trie.value is not None:
@@ -159,7 +212,9 @@ def height(trie):
     :param trie: Trie struct
     :return: max_height
     """
-    data = actual_height(trie, 1)
+    data = actual_height(trie, 0)
+    if data == 0:
+        return 0
     data = data.split(",")
     max_height = 0
     for i in data:
@@ -168,8 +223,18 @@ def height(trie):
 
     return max_height
 
+
 def actual_height(trie, height):
-    if trie.value is not None:
+    """
+    The real height function, recursively gets every possible height and returns them as a string
+    separated by commas
+    :param trie: Trie struct
+    :param height: recursive height
+    :return: heights for every branch in the form of a string
+    """
+    if trie is None:
+        return 0
+    elif trie.value is not None:
         return str(height)
     elif trie.left is not None and trie.right is not None:
         return actual_height(trie.left, height + 1) + "," + actual_height(trie.right, height + 1)
@@ -220,7 +285,6 @@ def test_list():
     insert(T, "1011")
     insert(T, "1100")
     insert(T, "1101")
-    insert(T, "1110")
     insert(T, "1111")
     print(T)
     print(trie_to_list(T))
@@ -228,6 +292,6 @@ def test_list():
     print(smallest(T))
     print(size(T))
     print(height(T))
+    print(search(T, "1110"))
 
 
-test_list()
