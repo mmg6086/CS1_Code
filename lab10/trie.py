@@ -30,25 +30,28 @@ def build_subtree(l, s, pre):
 def real_insert(T, x, s):
     if T.value == s:
         return False
-    elif T.left is None and T.right is None and T.value is None:
+    elif T.value is None and T.left is None and T.right is None:
         T.value = s
         return True
     elif T.value is not None:
-        n = build_subtree(T.value, s, "")
+        index = len(s) - len(x)
+        n = build_subtree(T.value[index:], x, s[(len(s)-index):])
         T.value = None
         T.left = n.left
         T.right = n.right
         return True
     elif x[0] == "0":
-        if T.left is not None:
-            return real_insert(T.left, x[1:], s)
-        else:
+        if T.left is None:
             T.left = Trie(None, s, None)
-    else:
-        if T.right is not None:
-            return real_insert(T.right, x[1:], s)
+            return True
         else:
+            return real_insert(T.left, x[1:], s)
+    elif x[0] == "1":
+        if T.right is None:
             T.right = Trie(None, s, None)
+            return True
+        else:
+            return real_insert(T.right, x[1:], s)
 
 
 def trie_to_list(trie):
@@ -57,6 +60,7 @@ def trie_to_list(trie):
     print(data)
     return data
 
+
 def trie_data_retrieval(trie):
     if trie is None:
         return
@@ -64,11 +68,11 @@ def trie_data_retrieval(trie):
         return trie.value
     elif trie.value is None:
         if trie.left is not None and trie.right is not None:
-            return [trie_data_retrieval(trie.left), trie_data_retrieval(trie.right)]
-        elif trie.right is None:
-            return trie_data_retrieval(trie.left)
+            return trie_data_retrieval(trie.left)+","+trie_data_retrieval(trie.right)
         elif trie.left is None:
             return trie_data_retrieval(trie.right)
+        elif trie.right is None:
+            return trie_data_retrieval(trie.left)
 
 
 
@@ -107,6 +111,7 @@ def test_list():
     insert(T, "1101")
     insert(T, "1110")
     insert(T, "1111")
+    print(T)
     print(trie_to_list(T))
 
 
