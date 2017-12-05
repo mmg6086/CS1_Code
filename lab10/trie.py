@@ -139,7 +139,21 @@ def search(trie, st):
 
 
 def size(trie):
+    if trie is None:
+        return 0
+    elif trie.value is not None:
+        return 1
+    elif trie.value is None:
+        if trie.left is not None and trie.right is not None:
+            return size(trie.left)+size(trie.right)
+        elif trie.left is None:
+            return size(trie.right)
+        elif trie.right is None:
+            return size(trie.left)
 
+
+def height(trie):
+    pass
 
 def test_insert():
     """
@@ -188,6 +202,7 @@ def test_list():
     print(trie_to_list(T))
     print(largest(T))
     print(smallest(T))
+    print(size(T))
 
 
 test_list()
