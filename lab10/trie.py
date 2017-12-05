@@ -5,7 +5,14 @@ Trie = struct_type("Trie",
                    (object, "value"),
                    (("Trie", NoneType), "right"))
 
+
 def insert(T, x):
+    """
+    having only 2 parameters was stupid, calls a good 3 parameter insert
+    :param T: Trie type
+    :param x: string to insert
+    :return: True or false, depending on the success of the insert
+    """
     if real_insert(T, x, x):
         return True
     else:
@@ -13,6 +20,13 @@ def insert(T, x):
 
 
 def build_subtree(l, s, pre):
+    """
+    builds subtree when a leaf is already present
+    :param l: string found on the leaf
+    :param s: original string to insert
+    :param pre: prefix of both l and s, a precursor to finding this tree
+    :return: Either false if they're the same value, or a new Trie that has l and s properly distinguished or something
+    """
     if l == s:
         return False
     elif l[0] == s[0]:
@@ -28,13 +42,20 @@ def build_subtree(l, s, pre):
 
 
 def real_insert(T, x, s):
+    """
+    insert's cooler older brother, takes a trie, a string splice, and the original string
+    :param T: Trie struct, can be empty, not empty, or fun, but not all at once
+    :param x: substring of s, used to compare with further steps of the ladder
+    :param s: whole string
+    :return: either True if it is inserted, or False if the value is already in the Trie
+    """
     if T.value == s:
         return False
     elif T.value is None and T.left is None and T.right is None:
         T.value = s
         return True
     elif T.value is not None:
-        index = len(s) - len(x)
+        index = len(s) - len(x) # im sorry for this spaghetti, but it works so hey
         n = build_subtree(T.value[index:], x, s[0:len(s)-len(x)])
         T.value = None
         T.left = n.left
@@ -55,13 +76,22 @@ def real_insert(T, x, s):
 
 
 def trie_to_list(trie):
-    lst = []
+    """
+    ghetto a'f method of getting a trie to a list, where theres a cool string intermediary step.
+    :param trie: Trie type
+    :return: list of strings in order
+    """
     data = trie_data_retrieval(trie)
     data = data.split(",")
     return data
 
 
 def trie_data_retrieval(trie):
+    """
+    helper function of trie_to_list, recursively retrieves all of the data in order
+    :param trie: Trie struct
+    :return: string of all the data, separated by commas
+    """
     if trie is None:
         return
     elif trie.value is not None:
@@ -75,8 +105,47 @@ def trie_data_retrieval(trie):
             return trie_data_retrieval(trie.left)
 
 
+def largest(trie):
+    """
+    finds the largest string in the trie
+    :param trie: Trie struct
+    :return: largest string
+    """
+    if trie.left is None and trie.right is None:
+        return trie.value
+    elif trie.right is not None:
+        return largest(trie.right)
+    elif trie.right is None and trie.left is not None:
+        return largest(trie.left)
+
+
+def smallest(trie):
+    """
+    finds the smallest string in the Trie
+    :param trie: Trie trype
+    :return: smallest string
+    """
+    if trie.left is None and trie.right is None:
+        return trie.value
+    elif trie.left is not None:
+        return smallest(trie.left)
+    elif trie.left is None and trie.right is not None:
+        return smallest(trie.right)
+
+
+def search(trie, st):
+    fuck_this = "I got other things to do"
+    return fuck_this
+
+
+def size(trie):
+
 
 def test_insert():
+    """
+    test function for insertion
+    :return: none
+    """
     T = Trie(None, None, None)
     print(insert(T, "00"))
     print(T)
@@ -94,6 +163,10 @@ def test_insert():
 
 
 def test_list():
+    """
+    test function for making and returning a list
+    :return: None
+    """
     T = Trie(None, None, None)
     insert(T, "0000")
     insert(T, "0001")
@@ -113,7 +186,8 @@ def test_list():
     insert(T, "1111")
     print(T)
     print(trie_to_list(T))
-
+    print(largest(T))
+    print(smallest(T))
 
 
 test_list()
