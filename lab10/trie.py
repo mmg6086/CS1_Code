@@ -153,7 +153,31 @@ def size(trie):
 
 
 def height(trie):
-    pass
+    """
+    takes in the trie and passes to another helper function to find the height of every branch
+    possible, then compares them to find the largest
+    :param trie: Trie struct
+    :return: max_height
+    """
+    data = actual_height(trie, 1)
+    data = data.split(",")
+    max_height = 0
+    for i in data:
+        if int(i) > max_height:
+            max_height = int(i)
+
+    return max_height
+
+def actual_height(trie, height):
+    if trie.value is not None:
+        return str(height)
+    elif trie.left is not None and trie.right is not None:
+        return actual_height(trie.left, height + 1) + "," + actual_height(trie.right, height + 1)
+    elif trie.right is None:
+        return actual_height(trie.left, height + 1)
+    elif trie.left is None:
+        return actual_height(trie.right, height + 1)
+
 
 def test_insert():
     """
@@ -203,6 +227,7 @@ def test_list():
     print(largest(T))
     print(smallest(T))
     print(size(T))
+    print(height(T))
 
 
 test_list()
