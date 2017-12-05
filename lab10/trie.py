@@ -35,7 +35,7 @@ def real_insert(T, x, s):
         return True
     elif T.value is not None:
         index = len(s) - len(x)
-        n = build_subtree(T.value[index:], x, s[(len(s)-index):])
+        n = build_subtree(T.value[index:], x, s[0:len(s)-len(x)])
         T.value = None
         T.left = n.left
         T.right = n.right
@@ -57,7 +57,7 @@ def real_insert(T, x, s):
 def trie_to_list(trie):
     lst = []
     data = trie_data_retrieval(trie)
-    print(data)
+    data = data.split(",")
     return data
 
 
